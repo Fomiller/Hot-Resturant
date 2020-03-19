@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Bootstrap scripts -->
+    <script src="https://code.jquery.com/jquery.js"></script>    
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="#">
+    <!-- Custom Scripts -->
+    <script src="#"></script>
+    <title>Add a Reservation</title>
+</head>
+<body>
+    <div class="container">
+        <div class="jumbotron">
+            <h1 class="text-center">
+              <span class="fa fa-fire"></span> Hot Restaurant</h1>
+            <hr>
+            <h2 class="text-center">Make your reservation</h2>
+            <br>
+            <div class="text-center">
+              <a href="/view">
+                <button class="btn btn-lg btn-primary">
+                  <span class="fa fa-list-alt"></span> View Tables</button>
+              </a>
+              <a href="/">
+                <button class="btn btn-lg btn-default">
+                  <span class="fa fa-home"></span>
+                </button>
+              </a>
+            </div>
+          </div>
+        <div class="card">
+            <div class="card-header">
+              Table Reservation
+            </div>
+            <div class="card-body">
+              <form role="form">
+
+                <div class="form-group">
+                  <label for="reserve-name">Name</label>
+                  <input type="text" class="form-control" id="name">
+                </div>
+
+                <div class="form-group">
+                  <label for="reserve-party">Party Size</label>
+                  <input type="text" class="form-control" id="partySize">
+                </div>
+
+                <div class="form-group">
+                  <label for="reserve-phone">Phone Number</label>
+                  <input type="text" class="form-control" id="phoneNum">
+                </div>
+
+                <div class="form-group">
+                  <label for="reserve-email">Email</label>
+                  <input type="text" class="form-control" id="email">
+                </div>
+
+                <button type="submit" class="btn btn-primary submit" id="add-btn">Submit</button>
+              </form>
+            </div>
+          </div>
+    </div>
+    
+    <!-- Add submit script -->
+    <script type="text/javascript">
+      // In this code below we create the Front-end JavaScript which "POSTS" our form data to our express server.
+      // In essence, when the user hits submit, jQuery grabs all of the fields then sends a post request to our api
+      // Our api recognizes the route (/api/tables)... and then runs the associated code (found in api-routes.js).
+      // In this case the associated code "saves" the data to the table-data.js file or waitinglist-data.js file
+    
+      $(".submit").on("click", function(event) {
+        event.preventDefault();
+    
+        // Here we grab the form elements
+        var newReservation = {
+          name: $("#name").val().trim(),
+          partySize: $("#partySize").val().trim(),
+          phoneNum: $("#phoneNum").val().trim(),
+          email: $("#email").val().trim(),
+        };
+    
+        console.log(newReservation);
+    
+        // This line is the magic. It"s very similar to the standard ajax function we used.
+        // Essentially we give it a URL, we give it the object we want to send, then we have a "callback".
+        // The callback is the response of the server. In our case, we set up code in api-routes that "returns" true or false
+        // depending on if a tables is available or not.
+    
+        $.post("/api/tables", newReservation,
+          function(data) {
+    
+            // If a table is available... tell user they are booked.
+            if (data) {
+              alert("Yay! You are officially booked!");
+            }
+    
+            // If a table is available... tell user they on the waiting list.
+            else {
+              alert("Sorry you are on the wait list");
+            }
+    
+            // Clear the form when submitting
+            $("#name").val("");
+            $("#partySize").val("");
+            $("#phoneNum").val("");
+            $("#email").val("");
+    
+          });
+    
+      });
+    
+    </script>
+</body>
+</html>
